@@ -1,6 +1,12 @@
 # basic-todolist-app
 
-## Lakukan import database yang ada pada folder "db_dump"
+## Lakukan import database yang ada pada folder "db_dump", lalu lakukan konfigurasi database yang ada pada folder 'utils/mysql/connection.js'
+### Nama database yang digunakan adalah "db_todolist" dengan nama tabel "todolist", dengan stuktur berikut:
+Data | Type | Size
+------------ | -------------| -------------
+id | int | 11
+title | String | 100
+date | String | 20
 
 ## Project setup
 ```
@@ -10,12 +16,9 @@ npm install --save
 ```
 npm run start / nodemon
 ```
-### "db_todolist" schema with structure
-Data | Type | Size
------------- | -------------| -------------
-id | int | 11
-title | String | 100
-date | String | 20
+```
+localhost:3001
+```
 
 ### Example of basic CRUD with Node.js (Express), EJS, and MYSQL:
 #### 1st image, my to-do-list app Index page! When list item is created successfully, the list item will appear on the table.
