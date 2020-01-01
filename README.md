@@ -14,7 +14,7 @@ npm install --save
 ```
 ## Compiles and run Node.js server
 ```
-npm run start / nodemon
+nodemon
 ```
 ```
 localhost:3001
