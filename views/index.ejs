@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title><%=pageTitle %></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Item</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/create-item" enctype="application/x-www-form-urlencoded" method="POST">
+            <div class="form-group">
+              <label for="title">Title <small>(Max 100 characters)</small></label>
+              <input required name="title" type="text" class="form-control" placeholder="Input your list item title..." id="addTitle">
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-primary">Reset</button>
+          <button onclick="return checkLengthAdd()" type="submit" class="btn btn-success">Submit</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Edit button -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Item</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form enctype="application/x-www-form-urlencoded" method="POST" action="/edit-item">
+
+            <div class="form-group">
+              <label for="title">Your Title <small>(Max 100 characters)</small></label>
+              <input class="form-control todolist_id" type="hidden" name="id">
+              <input class="form-control todolist_title" type="text" name="title"
+                placeholder="Input your list item title..." required id="editTitle">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button onclick="return checkLengthEdit()" type="submit" class="btn btn-warning">Change</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- End of Modal for Edit button -->
+  <main role="main" class="container">
+    <div style="background-color: royalblue;"
+      class="d-flex align-items-center p-3 my-3 text-white-50 rounded shadow-sm">
+      <img class="mr-3"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/VisualEditor_-_Icon_-_Indent-list-ltr_-_white.svg/768px-VisualEditor_-_Icon_-_Indent-list-ltr_-_white.svg.png"
+        alt="" width="48" height="48">
+      <div class="lh-100">
+        <h2 class="mb-0 text-white lh-100">To-Do-List</h2>
+        <small>@badawi1713</small>
+      </div>
+    </div>
+    <div>
+      <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#exampleModal">+
+        Add Item</button>
+    </div>
+  </main>
+
+  <!-- Table List -->
+  <div class="container">
+    <div class="table">
+      <table class="table table-hover table-borderless">
+        <thead>
+          <th width="80%" scope="col">Item List</th>
+          <th scope="col">Date</th>
+          <th scope="col">Action</th>
+        </thead>
+        <tbody>
+          <% if (data.length === 0){ %>
+          <td colspan="4">
+            <center>
+              <h4>You have nothing to do!</h4>
+            </center>
+          </td>
+
+          <% } else { %>
+
+          <% for (var i = 0; i<data.length; i++) { %>
+          <tr>
+            <td scope="row"><%=data[i].title%></td>
+            <td><%=data[i].date%></td>
+            <td>
+              <div class="row">
+                <div style="padding: 0 10px 10px 0;">
+                  <button type="button" class="btn btn-warning edit_button" title="edit" data-toggle="modal"
+                    data-target="#myModal" data-title="<%= data[i].title%>" data-id="<%= data[i].id %>">
+                    <i class="fa fa-pencil" style="color:white"></i>
+                  </button>
+                </div>
+
+                <div>
+                  <form action="/delete" enctype="application/x-www-form-urlencoded" method="post">
+                    <input type="hidden" name="id" value="<%= data[i].id %>" />
+                    <button onclick="return deleteItem()" class="btn btn-danger" title="delete"><i
+                        class="fa fa-trash"></i></button>
+                  </form>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <% } %>
+          <% }%>
+        </tbody>
+        <caption style="text-align: center"><i class="fa fa-list"></i> My To-Do-List - ©2020</caption>
+
+      </table>
+
+    </div>
+
+  </div>
+  <!-- End of Table List -->
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+
+
+  <script>
+    // Insert Form To-Do-List Modal Script
+    $('#exampleModal').on('show.bs.modal', function (event) {
+
+    });
+
+    // Edit List Item Modal script
+    $(document).on("click", '.edit_button', function (e) {
+      var title = $(this).data('title');
+      var id = $(this).data('id');
+
+      $(".todolist_id").val(id);
+      $(".todolist_title").val(title);
+    });
+
+    function checkLengthAdd() {
+      var inputTitle = document.getElementById("addTitle");
+      if (inputTitle.value.length <= 100 && inputTitle.value.length >= 3) {
+        console.log('Input OK!');
+      } else {
+        alert("Make sure the title is between 3-100 characters long!");
+        return false;
+      }
+    }
+
+    function checkLengthEdit() {
+      var inputTitle = document.getElementById("editTitle");
+      if (inputTitle.value.length <= 100 && inputTitle.value.length >= 3) {
+        console.log('Input OK!');
+      } else {
+        alert("Make sure the title is between 3-100 characters long!");
+        return false;
+      }
+    }
+
+    function deleteItem() {
+      var r = confirm('Confirmation to delete item?');
+      if (r == true) {
+        alert('Item deleted!');
+      } else {
+        alert('Item deleted have been canceled!');
+        return false;
+      }
+    };
+  </script>
+
+</body>
+
+</html>
